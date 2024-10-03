@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <textarea readonly id="chat"></textarea>
+    
+    <input type="text" id="text" placeholder="digitar...">
+
+    <button id="btn">enviar</button>
+
+<script>
+
+    const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/app/{{nome}}/")
+
+    chatSocket.onmessage = function(event){
+        const data = JSON.parse(event.data)
+        console.log(data.message)
+        document.getElementById('chat').value += data.message + "\n"
+    }
+
+    var btn = document.getElementById('btn');
+    btn.addEventListener("click", function(event){
+        chatSocket.send(JSON.stringify({
+            'message': document.getElementById('text').value
+        }));
+    }, true)
+
+</script>
+
+</body>
+</html>
